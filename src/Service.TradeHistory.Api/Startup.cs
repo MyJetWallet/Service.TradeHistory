@@ -7,11 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyJetWallet.Sdk.GrpcMetrics;
 using MyJetWallet.Sdk.GrpcSchema;
+using MyJetWallet.Sdk.Postgres;
 using Prometheus;
 using ProtoBuf.Grpc.Server;
 using Service.TradeHistory.Api.Modules;
 using Service.TradeHistory.Api.Services;
 using Service.TradeHistory.Grpc;
+using Service.TradeHistory.Postgres;
 using SimpleTrading.BaseMetrics;
 using SimpleTrading.ServiceStatusReporterConnector;
 
@@ -28,6 +30,8 @@ namespace Service.TradeHistory.Api
             });
 
             services.AddHostedService<ApplicationLifetimeManager>();
+
+            services.AddDatabaseWithoutMigrations<DatabaseContext>(DatabaseContext.Schema, Program.Settings.PostgresConnectionString);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

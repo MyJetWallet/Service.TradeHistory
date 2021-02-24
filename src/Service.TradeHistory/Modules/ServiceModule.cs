@@ -1,14 +1,20 @@
 ﻿using Autofac;
-using Autofac.Core;
-using Autofac.Core.Registration;
+using MyJetWallet.Sdk.Service;
+using MyServiceBus.TcpClient;
+using Service.MatchingEngine.EventBridge.ServiceBus;
+using Service.TradeHistory.Job.Job;
 
-namespace Service.TradeHistory.Modules
+namespace Service.TradeHistory.Job.Modules
 {
     public class ServiceModule: Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            
+            var serviceBusClient = new MyServiceBusTcpClient(Program.ReloadedSettings(e => e.SpotServiceBusHostPort), ApplicationEnvironment.HostName);
+            builder.RegisterInstance(serviceBusClient).AsSelf().SingleInstance();
+            builder.RegisterMeEventSubscriber(serviceBusClient, "trade-history", false);
+
+            builder.RegisterType<TradeUpdateHistoryJob>().AutoActivate().SingleInstance();
         }
     }
 }

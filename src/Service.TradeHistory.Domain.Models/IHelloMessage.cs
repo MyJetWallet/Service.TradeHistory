@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Service.TradeHistory.Domain.Models
+﻿namespace Service.TradeHistory.Domain.Models
 {
     public interface IHelloMessage
     {

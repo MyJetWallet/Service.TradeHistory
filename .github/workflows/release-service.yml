@@ -31,7 +31,7 @@ jobs:
       run: ls
 
     - name: Publish Service job
-      run: dotnet publish ./src/Service.TradeHistory/Service.TradeHistory.csproj --configuration Release /p:AssemblyVersion=${GITHUB_REF#refs/tags/} --output ./publish-api-job
+      run: dotnet publish ./src/Service.TradeHistory/Service.TradeHistory.Job.csproj --configuration Release /p:AssemblyVersion=${GITHUB_REF#refs/tags/} --output ./publish-api-job
 
     - name: Publish Service api
       run: dotnet publish ./src/Service.TradeHistory.Api/Service.TradeHistory.Api.csproj --configuration Release /p:AssemblyVersion=${GITHUB_REF#refs/tags/} --output ./publish-api-api

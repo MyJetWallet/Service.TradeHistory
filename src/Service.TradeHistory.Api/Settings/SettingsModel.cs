@@ -7,5 +7,8 @@ namespace Service.TradeHistory.Api.Settings
     {
         [YamlProperty("TradeHistory.SeqServiceUrl")]
         public string SeqServiceUrl { get; set; }
+
+        [YamlProperty("TradeHistory.PostgresConnectionString")]
+        public string PostgresConnectionString { get; set; }
     }
 }

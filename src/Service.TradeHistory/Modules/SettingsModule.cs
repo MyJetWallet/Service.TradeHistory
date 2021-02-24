@@ -1,6 +1,6 @@
 ﻿using Autofac;
 
-namespace Service.TradeHistory.Modules
+namespace Service.TradeHistory.Job.Modules
 {
     public class SettingsModule : Module
     {

@@ -1,21 +1,21 @@
 ﻿using System.Reflection;
+using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Autofac;
 using MyJetWallet.Sdk.GrpcMetrics;
 using MyJetWallet.Sdk.GrpcSchema;
+using MyJetWallet.Sdk.Postgres;
 using Prometheus;
 using ProtoBuf.Grpc.Server;
-using Service.TradeHistory.Grpc;
-using Service.TradeHistory.Modules;
-using Service.TradeHistory.Services;
+using Service.TradeHistory.Job.Modules;
+using Service.TradeHistory.Postgres;
 using SimpleTrading.BaseMetrics;
 using SimpleTrading.ServiceStatusReporterConnector;
 
-namespace Service.TradeHistory
+namespace Service.TradeHistory.Job
 {
     public class Startup
     {
@@ -28,6 +28,8 @@ namespace Service.TradeHistory
             });
 
             services.AddHostedService<ApplicationLifetimeManager>();
+
+            services.AddDatabase(DatabaseContext.Schema, Program.Settings.PostgresConnectionString, o => new DatabaseContext(o));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,8 +49,6 @@ namespace Service.TradeHistory
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcSchema<HelloService, IHelloService>();
-
                 endpoints.MapGrpcSchemaRegistry();
 
                 endpoints.MapGet("/", async context =>

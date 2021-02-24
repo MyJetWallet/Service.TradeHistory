@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using System;
+﻿using System;
 using System.Net;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MyJetWallet.Sdk.Service;
-using Service.TradeHistory.Settings;
+using Service.TradeHistory.Job.Settings;
 using SimpleTrading.SettingsReader;
 
-namespace Service.TradeHistory
+namespace Service.TradeHistory.Job
 {
     public class Program
     {
@@ -30,7 +30,7 @@ namespace Service.TradeHistory
 
         public static void Main(string[] args)
         {
-            Console.Title = "MyJetWallet Service.TradeHistory";
+            Console.Title = "MyJetWallet Service.TradeHistory.Job";
 
             Settings = SettingsReader.ReadSettings<SettingsModel>(SettingsFileName);
 
