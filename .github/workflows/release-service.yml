@@ -27,8 +27,6 @@ jobs:
       run: dotnet build --configuration Release /p:AssemblyVersion=${GITHUB_REF#refs/tags/}
     - name: Test
       run: dotnet test --no-build --configuration Release
-    - name: ls
-      run: ls
 
     - name: Publish Service job
       run: dotnet publish ./src/Service.TradeHistory/Service.TradeHistory.Job.csproj --configuration Release /p:AssemblyVersion=${GITHUB_REF#refs/tags/} --output ./publish-api-job

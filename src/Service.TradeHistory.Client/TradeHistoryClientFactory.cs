@@ -14,10 +14,10 @@ namespace Service.TradeHistory.Client
     {
         private readonly CallInvoker _channel;
 
-        public TradeHistoryClientFactory(string assetsDictionaryGrpcServiceUrl)
+        public TradeHistoryClientFactory(string tradeHistoryGrpcServiceUrl)
         {
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-            var channel = GrpcChannel.ForAddress(assetsDictionaryGrpcServiceUrl);
+            var channel = GrpcChannel.ForAddress(tradeHistoryGrpcServiceUrl);
             _channel = channel.Intercept(new PrometheusMetricsInterceptor());
         }
 
