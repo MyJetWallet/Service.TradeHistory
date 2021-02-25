@@ -4,11 +4,12 @@ using Service.TradeHistory.Domain.Models;
 
 namespace Service.TradeHistory.Postgres
 {
-    public class TradeHistoryEntity: WalletTrader
+    public class TradeHistoryEntity: WalletTrade
     {
         public TradeHistoryEntity(string tradeUId, string instrumentSymbol, double price, double baseVolume, double quoteVolume, 
-            string orderId, OrderType type, double orderVolume, DateTime dateTime, long tradeId, long sequenceId, string brokerId, string clientId, string walletId) 
-                : base(tradeUId, instrumentSymbol, price, baseVolume, quoteVolume, orderId, type, orderVolume, dateTime, tradeId, sequenceId)
+            string orderId, OrderType type, double orderVolume, DateTime dateTime, long tradeId, 
+            OrderSide side, long sequenceId, string brokerId, string clientId, string walletId) 
+                : base(tradeUId, instrumentSymbol, price, baseVolume, quoteVolume, orderId, type, orderVolume, dateTime, tradeId, side, sequenceId)
         {
             BrokerId = brokerId;
             ClientId = clientId;

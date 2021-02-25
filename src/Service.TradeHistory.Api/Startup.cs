@@ -51,7 +51,7 @@ namespace Service.TradeHistory.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcSchema<HelloService, IHelloService>();
+                endpoints.MapGrpcSchema<WalletTradeService, IWalletTradeService>();
 
                 endpoints.MapGrpcSchemaRegistry();
 

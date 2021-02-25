@@ -10,7 +10,7 @@ using Service.TradeHistory.Postgres;
 namespace Service.TradeHistory.Postgres.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210225140745_ver_0")]
+    [Migration("20210225170216_ver_0")]
     partial class ver_0
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,9 @@ namespace Service.TradeHistory.Postgres.Migrations
 
                     b.Property<long>("SequenceId")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("Side")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TradeUId")
                         .HasMaxLength(128)

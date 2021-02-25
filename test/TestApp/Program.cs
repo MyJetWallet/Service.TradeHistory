@@ -16,11 +16,14 @@ namespace TestApp
             Console.ReadLine();
 
 
-            var factory = new TradeHistoryClientFactory("http://localhost:5001");
-            var client = factory.GetHelloService();
+            var factory = new TradeHistoryClientFactory("http://localhost:80");
+            var client = factory.GetWalletTradeService();
 
-            var resp = await  client.SayHelloAsync(new HelloRequest(){Name = "Alex"});
-            Console.WriteLine(resp?.Message);
+            var resp = await  client.GetTradesAsync(new GetTradesRequest(){WalletId = "test--default", Take = 5});
+            foreach (var trade in resp.Trades)
+            {
+                Console.WriteLine($"trade {trade.InstrumentSymbol} {trade.Side} {trade.BaseVolume} to {trade.QuoteVolume} | {trade.TradeUId}");
+            }
 
             Console.WriteLine("End");
             Console.ReadLine();

@@ -30,6 +30,7 @@ namespace Service.TradeHistory.Postgres.Migrations
                     OrderVolume = table.Column<double>(type: "double precision", nullable: false),
                     DateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     TradeUId = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
+                    Side = table.Column<int>(type: "integer", nullable: false),
                     SequenceId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>

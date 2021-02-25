@@ -61,6 +61,9 @@ namespace Service.TradeHistory.Postgres.Migrations
                     b.Property<long>("SequenceId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("Side")
+                        .HasColumnType("integer");
+
                     b.Property<string>("TradeUId")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");

@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using DotNetCoreDecorators;
-using Grpc.Core.Logging;
 using ME.Contracts.OutgoingMessages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyJetWallet.Domain.Orders;
 using Newtonsoft.Json;
-using Service.TradeHistory.Domain.Models;
 using Service.TradeHistory.Postgres;
 
 namespace Service.TradeHistory.Job.Job
@@ -60,7 +57,9 @@ namespace Service.TradeHistory.Job.Job
                         order.Order.ExternalId,
                         MapOrderType(order.Order.OrderType), double.Parse(order.Order.Volume),
                         order.Order.LastMatchTime.ToDateTime(),
-                        0, order.SequenceNumber, 
+                        0,
+                        MapSide(order.Order.Side), 
+                        order.SequenceNumber, 
                         order.Order.BrokerId, order.Order.AccountId, order.Order.WalletId);
 
                     list.Add(item);
@@ -83,6 +82,17 @@ namespace Service.TradeHistory.Job.Job
                 _logger.LogError(ex, "Cannot Handle event from ME: {eventText}", JsonConvert.SerializeObject(events));
                 throw;
             }
+        }
+
+        private OrderSide MapSide(Order.Types.OrderSide side)
+        {
+            switch (side)
+            {
+                case Order.Types.OrderSide.Buy: return OrderSide.Buy;
+                case Order.Types.OrderSide.Sell: return OrderSide.Sell;
+            }
+
+            return OrderSide.UnknownOrderSide;
         }
 
         private OrderType MapOrderType(Order.Types.OrderType orderType)

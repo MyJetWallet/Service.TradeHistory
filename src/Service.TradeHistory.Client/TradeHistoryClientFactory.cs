@@ -21,6 +21,8 @@ namespace Service.TradeHistory.Client
             _channel = channel.Intercept(new PrometheusMetricsInterceptor());
         }
 
-        public IHelloService GetHelloService() => _channel.CreateGrpcService<IHelloService>();
+        public IWalletTradeService GetWalletTradeService() => _channel.CreateGrpcService<IWalletTradeService>();
     }
+
+
 }

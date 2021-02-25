@@ -5,10 +5,10 @@ using MyJetWallet.Domain.Orders;
 namespace Service.TradeHistory.Domain.Models
 {
     [DataContract]
-    public class WalletTrader
+    public class WalletTrade
     {
-        public WalletTrader(string tradeUId, string instrumentSymbol, double price, double baseVolume, double quoteVolume, string orderId, OrderType type, 
-            double orderVolume, DateTime dateTime, long tradeId, long sequenceId)
+        public WalletTrade(string tradeUId, string instrumentSymbol, double price, double baseVolume, double quoteVolume, string orderId, OrderType type, 
+            double orderVolume, DateTime dateTime, long tradeId, OrderSide side, long sequenceId)
         {
             TradeUId = tradeUId;
             InstrumentSymbol = instrumentSymbol;
@@ -20,10 +20,17 @@ namespace Service.TradeHistory.Domain.Models
             OrderVolume = orderVolume;
             DateTime = dateTime;
             TradeId = tradeId;
+            Side = side;
             SequenceId = sequenceId;
         }
 
-        public WalletTrader()
+        public WalletTrade()
+        {
+        }
+
+        public WalletTrade(WalletTrade trade) 
+            : this(trade.TradeUId, trade.InstrumentSymbol, trade.Price, trade.BaseVolume, trade.QuoteVolume, trade.OrderId, trade.Type, 
+                   trade.OrderVolume, trade.DateTime, trade.TradeId, trade.Side, trade.SequenceId)
         {
         }
 
@@ -58,6 +65,9 @@ namespace Service.TradeHistory.Domain.Models
         public string TradeUId { get; set; }
 
         [DataMember(Order = 11)]
+        public OrderSide Side { get; set; }
+
+        [DataMember(Order = 12)]
         public long SequenceId { get; set; }
     }
 }
