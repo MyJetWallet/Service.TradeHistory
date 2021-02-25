@@ -7,10 +7,10 @@ namespace Service.TradeHistory.Domain.Models
     [DataContract]
     public class WalletTrader
     {
-        public WalletTrader(string tradeId, string instrumentSymbol, double price, double baseVolume, double quoteVolume, string orderId, OrderType type, 
-            double orderVolume, DateTime dateTime, long tradeNo, long sequenceId)
+        public WalletTrader(string tradeUId, string instrumentSymbol, double price, double baseVolume, double quoteVolume, string orderId, OrderType type, 
+            double orderVolume, DateTime dateTime, long tradeId, long sequenceId)
         {
-            TradeId = tradeId;
+            TradeUId = tradeUId;
             InstrumentSymbol = instrumentSymbol;
             Price = price;
             BaseVolume = baseVolume;
@@ -19,7 +19,7 @@ namespace Service.TradeHistory.Domain.Models
             Type = type;
             OrderVolume = orderVolume;
             DateTime = dateTime;
-            TradeNo = tradeNo;
+            TradeId = tradeId;
             SequenceId = sequenceId;
         }
 
@@ -28,7 +28,7 @@ namespace Service.TradeHistory.Domain.Models
         }
 
         [DataMember(Order = 1)]
-        public string TradeId { get; set; }
+        public long TradeId { get; set; }
 
         [DataMember(Order = 2)]
         public string InstrumentSymbol { get; set; }
@@ -54,8 +54,8 @@ namespace Service.TradeHistory.Domain.Models
         [DataMember(Order = 9)]
         public DateTime DateTime { get; set; }
 
-        [DataMember(Order = 10)]
-        public long TradeNo { get; set; }
+        [DataMember(Order = 10)] 
+        public string TradeUId { get; set; }
 
         [DataMember(Order = 11)]
         public long SequenceId { get; set; }

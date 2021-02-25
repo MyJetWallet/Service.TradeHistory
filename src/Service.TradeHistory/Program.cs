@@ -18,6 +18,8 @@ namespace Service.TradeHistory.Job
 
         public static SettingsModel Settings { get; private set; }
 
+        public static ILoggerFactory LogFactory { get; private set; }
+
         public static Func<T> ReloadedSettings<T>(Func<SettingsModel, T> getter)
         {
             return () =>
@@ -35,6 +37,9 @@ namespace Service.TradeHistory.Job
             Settings = SettingsReader.ReadSettings<SettingsModel>(SettingsFileName);
 
             using var loggerFactory = LogConfigurator.Configure("MyJetWallet", Settings.SeqServiceUrl);
+
+            LogFactory = loggerFactory;
+            //DatabaseContext.LoggerFactory = loggerFactory;
 
             var logger = loggerFactory.CreateLogger<Program>();
 

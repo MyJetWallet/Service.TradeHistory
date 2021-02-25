@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,12 +32,15 @@ namespace Service.TradeHistory.Job.Job
 
         private async ValueTask HandleEvents(IReadOnlyList<ME.Contracts.OutgoingMessages.OutgoingEvent> events)
         {
+            //_logger.LogDebug("Receive {count} OutgoingEvent from ME", events.Count);
             try
             {
+                var sw = new Stopwatch();
+                sw.Start();
+
                 var trades = events
                     .SelectMany(e => e.Orders.Select(i => new {e.Header.SequenceNumber, Order = i}))
-                    .Where(e => e.Order.Trades.Any())
-                    .ToList();
+                    .Where(e => e.Order.Trades.Any());
 
                 var list = new List<TradeHistoryEntity>();
 
@@ -45,25 +49,34 @@ namespace Service.TradeHistory.Job.Job
                     var baseVolume = order.Order.Trades.Sum(e => decimal.Parse(e.BaseVolume));
                     var quoteVolume = order.Order.Trades.Sum(e => decimal.Parse(e.QuotingVolume));
                     var price = Math.Abs(quoteVolume / baseVolume);
-                    var tradeId = $"{order.Order.Id}-{order.SequenceNumber}";
+                    var tradeId = $"{order.Order.ExternalId}-{order.SequenceNumber}";
                     var walletId = order.Order.WalletId;
                     var side = order.Order.Side;
 
-                    Console.WriteLine($"{tradeId}[{walletId}] {side} {baseVolume} for {quoteVolume} price: {price}");
+                    //Console.WriteLine($"{tradeId}[{walletId}] {side} {baseVolume} for {quoteVolume} price: {price} |{order.Order.LastMatchTime.ToDateTime():HH:mm:ss}");
 
                     var item = new TradeHistoryEntity(
                         tradeId, order.Order.AssetPairId, (double) price, (double) baseVolume, (double) quoteVolume,
-                        order.Order.Id,
+                        order.Order.ExternalId,
                         MapOrderType(order.Order.OrderType), double.Parse(order.Order.Volume),
                         order.Order.LastMatchTime.ToDateTime(),
-                        0, order.SequenceNumber, order.Order.BrokerId, order.Order.AccountId, order.Order.WalletId);
+                        0, order.SequenceNumber, 
+                        order.Order.BrokerId, order.Order.AccountId, order.Order.WalletId);
 
                     list.Add(item);
                 }
 
-                await using var ctx = new DatabaseContext(_dbContextOptionsBuilder.Options);
-                await ctx.Trades.AddRangeAsync(list);
-                await ctx.SaveChangesAsync();
+                if (list.Any())
+                {
+                    await using var ctx = new DatabaseContext(_dbContextOptionsBuilder.Options);
+
+                    await ctx.UpsetAsync(list);
+                    await ctx.UpsetAsync(list);
+                    await ctx.UpsetAsync(list);
+
+                    sw.Stop();
+                    _logger.LogDebug("Handle {countTrade} trades from ME ({countEvent} events). Time: {timeRangeText}", list.Count, events.Count, sw.Elapsed.ToString());
+                }
             }
             catch (Exception ex)
             {

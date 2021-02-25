@@ -10,8 +10,8 @@ using Service.TradeHistory.Postgres;
 namespace Service.TradeHistory.Postgres.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210224182427_ver_1")]
-    partial class ver_1
+    [Migration("20210225140745_ver_0")]
+    partial class ver_0
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,26 +24,32 @@ namespace Service.TradeHistory.Postgres.Migrations
 
             modelBuilder.Entity("Service.TradeHistory.Postgres.TradeHistoryEntity", b =>
                 {
-                    b.Property<string>("TradeId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AccountId")
-                        .HasColumnType("text");
+                    b.Property<long>("TradeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<double>("BaseVolume")
                         .HasColumnType("double precision");
 
                     b.Property<string>("BrokerId")
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("ClientId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("InstrumentSymbol")
-                        .HasColumnType("text");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("OrderId")
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<double>("OrderVolume")
                         .HasColumnType("double precision");
@@ -57,18 +63,23 @@ namespace Service.TradeHistory.Postgres.Migrations
                     b.Property<long>("SequenceId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("TradeNo")
-                        .HasColumnType("bigint");
+                    b.Property<string>("TradeUId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.Property<string>("WalletId")
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.HasKey("TradeId");
 
                     b.HasIndex("SequenceId");
+
+                    b.HasIndex("TradeUId")
+                        .IsUnique();
 
                     b.HasIndex("WalletId");
 
