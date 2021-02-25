@@ -38,7 +38,7 @@ jobs:
       run: ls
 
     - name: Publish Service
-      run: dotnet publish --no-build ./src/Service.TradeHistory/Service.TradeHistory.csproj --configuration Release --output ./publish-api-job
+      run: dotnet publish --no-build ./src/Service.TradeHistory/Service.TradeHistory.Job.csproj --configuration Release --output ./publish-api-job
 
     - name: Publish Service
       run: dotnet publish --no-build ./src/Service.TradeHistory.Api/Service.TradeHistory.Api.csproj --configuration Release --output ./publish-api-api
