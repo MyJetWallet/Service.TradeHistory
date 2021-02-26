@@ -10,7 +10,7 @@ using Service.TradeHistory.Postgres;
 namespace Service.TradeHistory.Postgres.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210225170216_ver_0")]
+    [Migration("20210226104651_ver_0")]
     partial class ver_0
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
