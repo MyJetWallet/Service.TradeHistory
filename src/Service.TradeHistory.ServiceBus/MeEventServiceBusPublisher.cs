@@ -8,7 +8,7 @@ using Service.TradeHistory.Domain.Models;
 namespace Service.TradeHistory.ServiceBus
 {
     [UsedImplicitly]
-    public class WalletTradeServiceBusPublisher : IPublisher<WalletTrade>
+    public class WalletTradeServiceBusPublisher : IPublisher<WalletTradeMessage>
     {
         public const string TopicName = "spot-trades";
 
@@ -20,7 +20,7 @@ namespace Service.TradeHistory.ServiceBus
             _client.CreateTopicIfNotExists(TopicName, 10000);
         }
 
-        public async ValueTask PublishAsync(WalletTrade valueToPublish)
+        public async ValueTask PublishAsync(WalletTradeMessage valueToPublish)
         {
             var bytesToSend = valueToPublish.ServiceBusContractToByteArray();
             await _client.PublishAsync(TopicName, bytesToSend, true);

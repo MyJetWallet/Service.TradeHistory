@@ -30,7 +30,7 @@ namespace Service.TradeHistory.Job.Modules
 
             builder
                 .RegisterInstance(new WalletTradeServiceBusPublisher(serviceBusClient))
-                .As<IPublisher<WalletTrade>>()
+                .As<IPublisher<WalletTradeMessage>>()
                 .SingleInstance();
 
             builder.RegisterType<TradeUpdateHistoryJob>().AutoActivate().SingleInstance();

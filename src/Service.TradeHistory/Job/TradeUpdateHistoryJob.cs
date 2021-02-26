@@ -11,6 +11,7 @@ using MyJetWallet.Domain.Orders;
 using Newtonsoft.Json;
 using Service.TradeHistory.Domain.Models;
 using Service.TradeHistory.Postgres;
+using Service.TradeHistory.ServiceBus;
 
 namespace Service.TradeHistory.Job.Job
 {
@@ -18,12 +19,12 @@ namespace Service.TradeHistory.Job.Job
     {
         private readonly ILogger<TradeUpdateHistoryJob> _logger;
         private readonly DbContextOptionsBuilder<DatabaseContext> _dbContextOptionsBuilder;
-        private readonly IPublisher<WalletTrade> _publisher;
+        private readonly IPublisher<WalletTradeMessage> _publisher;
 
         public TradeUpdateHistoryJob(ISubscriber<IReadOnlyList<ME.Contracts.OutgoingMessages.OutgoingEvent>> subscriber,
             ILogger<TradeUpdateHistoryJob> logger,
             DbContextOptionsBuilder<DatabaseContext> dbContextOptionsBuilder,
-            IPublisher<WalletTrade> publisher)
+            IPublisher<WalletTradeMessage> publisher)
         {
             _logger = logger;
             _dbContextOptionsBuilder = dbContextOptionsBuilder;
@@ -74,7 +75,7 @@ namespace Service.TradeHistory.Job.Job
 
                     await ctx.UpsetAsync(list);
 
-                    var tasks = list.Select(e => new WalletTrade(e)).Select(Publich).ToArray();
+                    var tasks = list.Select(Publish).ToArray();
                     await Task.WhenAll(tasks);
 
                     sw.Stop();
@@ -88,9 +89,16 @@ namespace Service.TradeHistory.Job.Job
             }
         }
 
-        public async Task Publich(WalletTrade trade)
+        public async Task Publish(TradeHistoryEntity trade)
         {
-            await _publisher.PublishAsync(trade);
+            var item = new WalletTradeMessage()
+            {
+                BrokerId = trade.BrokerId,
+                ClientId = trade.ClientId,
+                WalletId = trade.WalletId,
+                Trade = new WalletTrade(trade)
+            };
+            await _publisher.PublishAsync(item);
         }
 
         private OrderSide MapSide(Order.Types.OrderSide side)

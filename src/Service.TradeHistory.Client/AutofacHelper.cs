@@ -22,7 +22,7 @@ namespace Service.TradeHistory.Client
         {
             builder
                 .RegisterInstance(new WalletTradeServiceBusSubscriber(client, queueName, deleteOnDisconnect))
-                .As<ISubscriber<WalletTrade>>()
+                .As<ISubscriber<WalletTradeMessage>>()
                 .SingleInstance();
         }
     }

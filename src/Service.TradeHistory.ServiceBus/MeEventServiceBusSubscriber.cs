@@ -7,11 +7,11 @@ using Service.TradeHistory.Domain.Models;
 namespace Service.TradeHistory.ServiceBus
 {
     [UsedImplicitly]
-    public class WalletTradeServiceBusSubscriber : Subscriber<WalletTrade>
+    public class WalletTradeServiceBusSubscriber : Subscriber<WalletTradeMessage>
     {
         public WalletTradeServiceBusSubscriber(MyServiceBusTcpClient client, string queueName, bool deleteOnDisconnect) :
             base(client, WalletTradeServiceBusPublisher.TopicName, queueName, deleteOnDisconnect,
-                bytes => bytes.ByteArrayToServiceBusContract<WalletTrade>())
+                bytes => bytes.ByteArrayToServiceBusContract<WalletTradeMessage>())
         {
 
         }
