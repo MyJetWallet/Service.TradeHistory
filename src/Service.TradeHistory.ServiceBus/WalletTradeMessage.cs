@@ -6,9 +6,9 @@ namespace Service.TradeHistory.ServiceBus
     [DataContract]
     public class WalletTradeMessage
     {
-        [DataMember] public string BrokerId { get; set; }
-        [DataMember] public string ClientId { get; set; }
-        [DataMember] public string WalletId { get; set; }
-        [DataMember] public WalletTrade Trade { get; set; }
+        [DataMember(Order = 1)] public string BrokerId { get; set; }
+        [DataMember(Order = 2)] public string ClientId { get; set; }
+        [DataMember(Order = 3)] public string WalletId { get; set; }
+        [DataMember(Order = 4)] public WalletTrade Trade { get; set; }
     }
 }
