@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference PrivateAssets="All" Include="..\Service.TradeHistory.Domain.Models\Service.TradeHistory.Domain.Models.csproj" />
     <ProjectReference PrivateAssets="All" Include="..\Service.TradeHistory.Grpc\Service.TradeHistory.Grpc.csproj" />
+    <ProjectReference Include="..\Service.TradeHistory.ServiceBus\Service.TradeHistory.ServiceBus.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,6 +16,7 @@
     <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.35.0" />
     <PackageReference Include="MyJetWallet.Sdk.GrpcMetrics" Version="1.0.0" />
+    <PackageReference Include="MyJetWallet.Service.MatchingEngine.EventBridge.ServiceBus" Version="1.0.5" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
     <PackageReference Include="protobuf-net.Grpc" Version="1.0.147" />
   </ItemGroup>

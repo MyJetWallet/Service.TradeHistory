@@ -1,11 +1,14 @@
 ﻿using System;
 using Autofac;
+using DotNetCoreDecorators;
 using Microsoft.Extensions.Logging;
 using MyJetWallet.Sdk.Service;
 using MyServiceBus.TcpClient;
 using Newtonsoft.Json;
 using Service.MatchingEngine.EventBridge.ServiceBus;
+using Service.TradeHistory.Domain.Models;
 using Service.TradeHistory.Job.Job;
+using Service.TradeHistory.ServiceBus;
 
 namespace Service.TradeHistory.Job.Modules
 {
@@ -24,6 +27,11 @@ namespace Service.TradeHistory.Job.Modules
 
             builder.RegisterInstance(serviceBusClient).AsSelf().SingleInstance();
             builder.RegisterMeEventSubscriber(serviceBusClient, "trade-history", false);
+
+            builder
+                .RegisterInstance(new WalletTradeServiceBusPublisher(serviceBusClient))
+                .As<IPublisher<WalletTrade>>()
+                .SingleInstance();
 
             builder.RegisterType<TradeUpdateHistoryJob>().AutoActivate().SingleInstance();
         }

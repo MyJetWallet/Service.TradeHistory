@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Service.TradeHistory.Grpc\Service.TradeHistory.Grpc.csproj" />
     <ProjectReference Include="..\Service.TradeHistory.Postgres\Service.TradeHistory.Postgres.csproj" />
+    <ProjectReference Include="..\Service.TradeHistory.ServiceBus\Service.TradeHistory.ServiceBus.csproj" />
   </ItemGroup>
 
   <ItemGroup>

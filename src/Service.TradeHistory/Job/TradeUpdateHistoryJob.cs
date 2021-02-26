@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyJetWallet.Domain.Orders;
 using Newtonsoft.Json;
+using Service.TradeHistory.Domain.Models;
 using Service.TradeHistory.Postgres;
 
 namespace Service.TradeHistory.Job.Job
@@ -17,19 +18,21 @@ namespace Service.TradeHistory.Job.Job
     {
         private readonly ILogger<TradeUpdateHistoryJob> _logger;
         private readonly DbContextOptionsBuilder<DatabaseContext> _dbContextOptionsBuilder;
+        private readonly IPublisher<WalletTrade> _publisher;
 
         public TradeUpdateHistoryJob(ISubscriber<IReadOnlyList<ME.Contracts.OutgoingMessages.OutgoingEvent>> subscriber,
             ILogger<TradeUpdateHistoryJob> logger,
-            DbContextOptionsBuilder<DatabaseContext> dbContextOptionsBuilder)
+            DbContextOptionsBuilder<DatabaseContext> dbContextOptionsBuilder,
+            IPublisher<WalletTrade> publisher)
         {
             _logger = logger;
             _dbContextOptionsBuilder = dbContextOptionsBuilder;
+            _publisher = publisher;
             subscriber.Subscribe(HandleEvents);
         }
 
         private async ValueTask HandleEvents(IReadOnlyList<ME.Contracts.OutgoingMessages.OutgoingEvent> events)
         {
-            //_logger.LogDebug("Receive {count} OutgoingEvent from ME", events.Count);
             try
             {
                 var sw = new Stopwatch();
@@ -48,7 +51,7 @@ namespace Service.TradeHistory.Job.Job
                     var price = Math.Abs(quoteVolume / baseVolume);
                     var tradeId = $"{order.Order.ExternalId}-{order.SequenceNumber}";
                     var walletId = order.Order.WalletId;
-                    var side = order.Order.Side;
+                    var side = MapSide(order.Order.Side);
 
                     //Console.WriteLine($"{tradeId}[{walletId}] {side} {baseVolume} for {quoteVolume} price: {price} |{order.Order.LastMatchTime.ToDateTime():HH:mm:ss}");
 
@@ -58,9 +61,9 @@ namespace Service.TradeHistory.Job.Job
                         MapOrderType(order.Order.OrderType), double.Parse(order.Order.Volume),
                         order.Order.LastMatchTime.ToDateTime(),
                         0,
-                        MapSide(order.Order.Side), 
+                        side,
                         order.SequenceNumber, 
-                        order.Order.BrokerId, order.Order.AccountId, order.Order.WalletId);
+                        order.Order.BrokerId, order.Order.AccountId, walletId);
 
                     list.Add(item);
                 }
@@ -70,11 +73,12 @@ namespace Service.TradeHistory.Job.Job
                     await using var ctx = new DatabaseContext(_dbContextOptionsBuilder.Options);
 
                     await ctx.UpsetAsync(list);
-                    await ctx.UpsetAsync(list);
-                    await ctx.UpsetAsync(list);
+
+                    var tasks = list.Select(e => new WalletTrade(e)).Select(Publich).ToArray();
+                    await Task.WhenAll(tasks);
 
                     sw.Stop();
-                    _logger.LogDebug("Handle {countTrade} trades from ME ({countEvent} events). Time: {timeRangeText}", list.Count, events.Count, sw.Elapsed.ToString());
+                    _logger.LogInformation("Handle {countTrade} trades from ME ({countEvent} events). Time: {timeRangeText}", list.Count, events.Count, sw.Elapsed.ToString());
                 }
             }
             catch (Exception ex)
@@ -82,6 +86,11 @@ namespace Service.TradeHistory.Job.Job
                 _logger.LogError(ex, "Cannot Handle event from ME: {eventText}", JsonConvert.SerializeObject(events));
                 throw;
             }
+        }
+
+        public async Task Publich(WalletTrade trade)
+        {
+            await _publisher.PublishAsync(trade);
         }
 
         private OrderSide MapSide(Order.Types.OrderSide side)
