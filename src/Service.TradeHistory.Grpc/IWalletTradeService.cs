@@ -1,5 +1,6 @@
 using System.ServiceModel;
 using System.Threading.Tasks;
+using Service.TradeHistory.Domain.Models;
 using Service.TradeHistory.Grpc.Models;
 
 namespace Service.TradeHistory.Grpc
@@ -9,5 +10,8 @@ namespace Service.TradeHistory.Grpc
     {
         [OperationContract]
         Task<WalletTradeList> GetTradesAsync(GetTradesRequest request);
+
+        [OperationContract]
+        Task<WalletTradeList> GetSingleTradesAsync(GetSingleTradesRequest request);
     }
 }

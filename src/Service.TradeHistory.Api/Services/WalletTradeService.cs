@@ -61,5 +61,29 @@ namespace Service.TradeHistory.Api.Services
                 throw;
             }
         }
+
+        public async Task<WalletTradeList> GetSingleTradesAsync(GetSingleTradesRequest request)
+        {
+            try
+            {
+                await using var ctx = new DatabaseContext(_dbContextOptionsBuilder.Options);
+
+                var trade = await ctx.Trades.FirstOrDefaultAsync(e => e.TradeUId == request.TradeUid);
+
+                var resp = new WalletTradeList { Trades = new List<WalletTrade>() };
+                if (trade != null)
+                {
+                    resp.Trades.Add(new WalletTrade(trade));
+                }
+
+                return resp;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot get trades with UID: {tradeUId}", request.TradeUid);
+
+                throw;
+            }
+        }
     }
 }

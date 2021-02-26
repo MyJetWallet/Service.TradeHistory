@@ -61,7 +61,6 @@ namespace Service.TradeHistory.Job.Job
                         order.Order.ExternalId,
                         MapOrderType(order.Order.OrderType), double.Parse(order.Order.Volume),
                         order.Order.LastMatchTime.ToDateTime(),
-                        0,
                         side,
                         order.SequenceNumber, 
                         order.Order.BrokerId, order.Order.AccountId, walletId);

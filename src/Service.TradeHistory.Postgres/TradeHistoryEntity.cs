@@ -7,9 +7,9 @@ namespace Service.TradeHistory.Postgres
     public class TradeHistoryEntity: WalletTrade
     {
         public TradeHistoryEntity(string tradeUId, string instrumentSymbol, double price, double baseVolume, double quoteVolume, 
-            string orderId, OrderType type, double orderVolume, DateTime dateTime, long tradeId, 
+            string orderId, OrderType type, double orderVolume, DateTime dateTime,  
             OrderSide side, long sequenceId, string brokerId, string clientId, string walletId) 
-                : base(tradeUId, instrumentSymbol, price, baseVolume, quoteVolume, orderId, type, orderVolume, dateTime, tradeId, side, sequenceId)
+                : base(tradeUId, instrumentSymbol, price, baseVolume, quoteVolume, orderId, type, orderVolume, dateTime, side, sequenceId)
         {
             BrokerId = brokerId;
             ClientId = clientId;
@@ -25,5 +25,7 @@ namespace Service.TradeHistory.Postgres
         public string ClientId { get; set; }
 
         public string WalletId { get; set; }
+        
+        public long TradeId { get; set; }
     }
 }

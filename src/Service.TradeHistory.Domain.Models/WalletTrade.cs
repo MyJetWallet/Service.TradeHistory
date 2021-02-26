@@ -8,7 +8,7 @@ namespace Service.TradeHistory.Domain.Models
     public class WalletTrade
     {
         public WalletTrade(string tradeUId, string instrumentSymbol, double price, double baseVolume, double quoteVolume, string orderId, OrderType type, 
-            double orderVolume, DateTime dateTime, long tradeId, OrderSide side, long sequenceId)
+            double orderVolume, DateTime dateTime, OrderSide side, long sequenceId)
         {
             TradeUId = tradeUId;
             InstrumentSymbol = instrumentSymbol;
@@ -19,7 +19,6 @@ namespace Service.TradeHistory.Domain.Models
             Type = type;
             OrderVolume = orderVolume;
             DateTime = dateTime;
-            TradeId = tradeId;
             Side = side;
             SequenceId = sequenceId;
         }
@@ -30,44 +29,41 @@ namespace Service.TradeHistory.Domain.Models
 
         public WalletTrade(WalletTrade trade) 
             : this(trade.TradeUId, trade.InstrumentSymbol, trade.Price, trade.BaseVolume, trade.QuoteVolume, trade.OrderId, trade.Type, 
-                   trade.OrderVolume, trade.DateTime, trade.TradeId, trade.Side, trade.SequenceId)
+                   trade.OrderVolume, trade.DateTime, trade.Side, trade.SequenceId)
         {
         }
 
         [DataMember(Order = 1)]
-        public long TradeId { get; set; }
-
-        [DataMember(Order = 2)]
         public string InstrumentSymbol { get; set; }
 
-        [DataMember(Order = 3)]
+        [DataMember(Order = 2)]
         public double Price { get; set; }
 
-        [DataMember(Order = 4)]
+        [DataMember(Order = 3)]
         public double BaseVolume { get; set; }
 
-        [DataMember(Order = 5)]
+        [DataMember(Order = 4)]
         public double QuoteVolume { get; set; }
 
-        [DataMember(Order = 6)]
+        [DataMember(Order = 5)]
         public string OrderId { get; set; }
 
-        [DataMember(Order = 7)]
+        [DataMember(Order = 6)]
         public OrderType Type { get; set; }
 
-        [DataMember(Order = 8)]
+        [DataMember(Order = 7)]
         public double OrderVolume { get; set; }
 
-        [DataMember(Order = 9)]
+        [DataMember(Order = 8)]
         public DateTime DateTime { get; set; }
 
-        [DataMember(Order = 10)] 
+        [DataMember(Order = 9)] 
         public string TradeUId { get; set; }
 
-        [DataMember(Order = 11)]
+        [DataMember(Order = 10)]
         public OrderSide Side { get; set; }
 
-        [DataMember(Order = 12)]
+        [DataMember(Order = 11)]
         public long SequenceId { get; set; }
     }
 }
