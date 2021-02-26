@@ -7,7 +7,7 @@
   <ItemGroup>
     <ProjectReference PrivateAssets="All" Include="..\Service.TradeHistory.Domain.Models\Service.TradeHistory.Domain.Models.csproj" />
     <ProjectReference PrivateAssets="All" Include="..\Service.TradeHistory.Grpc\Service.TradeHistory.Grpc.csproj" />
-    <ProjectReference Include="..\Service.TradeHistory.ServiceBus\Service.TradeHistory.ServiceBus.csproj" />
+    <ProjectReference PrivateAssets="All" Include="..\Service.TradeHistory.ServiceBus\Service.TradeHistory.ServiceBus.csproj" />
   </ItemGroup>
 
   <ItemGroup>
