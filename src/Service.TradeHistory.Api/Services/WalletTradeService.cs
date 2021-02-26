@@ -39,6 +39,11 @@ namespace Service.TradeHistory.Api.Services
                     data = data.Where(e => e.SequenceId < request.LastSequenceId);
                 }
 
+                if (string.IsNullOrEmpty(request.Symbol))
+                {
+                    data = data.Where(e => e.InstrumentSymbol == request.Symbol);
+                }
+
                 data = data.OrderByDescending(e => e.SequenceId).Take(take);
 
                 var list = await data.ToListAsync();
