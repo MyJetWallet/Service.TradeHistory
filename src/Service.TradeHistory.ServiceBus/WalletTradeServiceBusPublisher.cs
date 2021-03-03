@@ -17,7 +17,7 @@ namespace Service.TradeHistory.ServiceBus
         public WalletTradeServiceBusPublisher(MyServiceBusTcpClient client)
         {
             _client = client;
-            _client.CreateTopicIfNotExists(TopicName, 10000);
+            _client.CreateTopicIfNotExists(TopicName);
         }
 
         public async ValueTask PublishAsync(WalletTradeMessage valueToPublish)
