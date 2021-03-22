@@ -1,13 +1,10 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using DotNetCoreDecorators;
 using Microsoft.Extensions.Logging;
 using MyJetWallet.Sdk.Service;
 using MyServiceBus.Abstractions;
 using MyServiceBus.TcpClient;
-using Newtonsoft.Json;
 using Service.MatchingEngine.EventBridge.ServiceBus;
-using Service.TradeHistory.Domain.Models;
 using Service.TradeHistory.Job.Job;
 using Service.TradeHistory.ServiceBus;
 
