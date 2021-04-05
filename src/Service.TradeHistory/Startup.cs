@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using MyJetWallet.Sdk.GrpcMetrics;
 using MyJetWallet.Sdk.GrpcSchema;
 using MyJetWallet.Sdk.Postgres;
+using MyJetWallet.Sdk.Service;
 using Prometheus;
 using ProtoBuf.Grpc.Server;
 using Service.TradeHistory.Job.Modules;
@@ -30,6 +31,8 @@ namespace Service.TradeHistory.Job
             services.AddHostedService<ApplicationLifetimeManager>();
 
             services.AddDatabase(DatabaseContext.Schema, Program.Settings.PostgresConnectionString, o => new DatabaseContext(o));
+
+            services.AddMyTelemetry(Program.Settings.ZipkinUrl);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

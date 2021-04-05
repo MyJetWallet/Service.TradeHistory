@@ -13,5 +13,8 @@ namespace Service.TradeHistory.Job.Settings
 
         [YamlProperty("TradeHistory.SpotServiceBusHostPort")]
         public string SpotServiceBusHostPort { get; set; }
+        
+        [YamlProperty("TradeHistory.ZipkinUrl")]
+        public string ZipkinUrl { get; set; }
     }
 }

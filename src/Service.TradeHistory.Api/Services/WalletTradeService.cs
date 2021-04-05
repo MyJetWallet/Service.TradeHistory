@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MyJetWallet.Sdk.Service;
 using Service.TradeHistory.Domain.Models;
 using Service.TradeHistory.Grpc;
 using Service.TradeHistory.Grpc.Models;
@@ -26,6 +27,8 @@ namespace Service.TradeHistory.Api.Services
 
         public async Task<WalletTradeList> GetTradesAsync(GetTradesRequest request)
         {
+            request.WalletId.AddToActivityAsTag("walletId");
+
             var take = request.Take ?? DefaultTakeValue;
 
             try
@@ -58,6 +61,9 @@ namespace Service.TradeHistory.Api.Services
                 _logger.LogError(e, "Cannot get trades for walletId: {walletId}, take: {takeValue}, LastSequenceId: {LastSequenceId}",
                     request.WalletId, take, request.LastSequenceId);
 
+                e.FailActivity();
+                request.AddToActivityAsJsonTag("request-data");
+
                 throw;
             }
         }
@@ -81,6 +87,8 @@ namespace Service.TradeHistory.Api.Services
             catch (Exception e)
             {
                 _logger.LogError(e, "Cannot get trades with UID: {tradeUId}", request.TradeUid);
+                e.FailActivity();
+                request.AddToActivityAsJsonTag("request-data");
 
                 throw;
             }

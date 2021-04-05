@@ -8,6 +8,7 @@ using ME.Contracts.OutgoingMessages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyJetWallet.Domain.Orders;
+using MyJetWallet.Sdk.Service;
 using Newtonsoft.Json;
 using Service.TradeHistory.Domain.Models;
 using Service.TradeHistory.Postgres;
@@ -32,12 +33,15 @@ namespace Service.TradeHistory.Job.Job
             subscriber.Subscribe(HandleEvents);
         }
 
-        private async ValueTask HandleEvents(IReadOnlyList<ME.Contracts.OutgoingMessages.OutgoingEvent> events)
+        private async ValueTask HandleEvents(IReadOnlyList<OutgoingEvent> events)
         {
+            using var activity = MyTelemetry.StartActivity("Handle events OutgoingEvent")?.AddTag("event-count", events.Count);
             try
             {
                 var sw = new Stopwatch();
                 sw.Start();
+
+
 
                 var trades = events
                     .SelectMany(e => e.Orders.Select(i => new {e.Header.SequenceNumber, Order = i}))
@@ -68,14 +72,22 @@ namespace Service.TradeHistory.Job.Job
                     list.Add(item);
                 }
 
+                activity?.AddTag("trade-count", list.Count);
+
                 if (list.Any())
                 {
-                    await using var ctx = new DatabaseContext(_dbContextOptionsBuilder.Options);
+                    using (var _ = MyTelemetry.StartActivity("Use DB context")?.AddTag("schema", DatabaseContext.Schema))
+                    {
+                        await using var ctx = new DatabaseContext(_dbContextOptionsBuilder.Options);
+                        await ctx.UpsetAsync(list);
+                    }
 
-                    await ctx.UpsetAsync(list);
 
-                    var tasks = list.Select(Publish).ToArray();
-                    await Task.WhenAll(tasks);
+                    using (var _ = MyTelemetry.StartActivity("Publish trade events"))
+                    {
+                        var tasks = list.Select(Publish).ToArray();
+                        await Task.WhenAll(tasks);
+                    }
 
                     sw.Stop();
                     _logger.LogInformation("Handle {countTrade} trades from ME ({countEvent} events). Time: {timeRangeText}", list.Count, events.Count, sw.Elapsed.ToString());
@@ -84,6 +96,8 @@ namespace Service.TradeHistory.Job.Job
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Cannot Handle event from ME: {eventText}", JsonConvert.SerializeObject(events));
+                ex.FailActivity();
+
                 throw;
             }
         }

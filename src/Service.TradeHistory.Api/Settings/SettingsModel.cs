@@ -10,5 +10,8 @@ namespace Service.TradeHistory.Api.Settings
 
         [YamlProperty("TradeHistory.PostgresConnectionString")]
         public string PostgresConnectionString { get; set; }
+
+        [YamlProperty("TradeHistory.ZipkinUrl")]
+        public string ZipkinUrl { get; set; }
     }
 }
