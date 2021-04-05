@@ -51,6 +51,8 @@ namespace Service.TradeHistory.Job.Job
 
                 foreach (var order in trades)
                 {
+                    using var tradeActivity = MyTelemetry.StartActivity("Register Trader");
+
                     var baseVolume = order.Order.Trades.Sum(e => decimal.Parse(e.BaseVolume));
                     var quoteVolume = order.Order.Trades.Sum(e => decimal.Parse(e.QuotingVolume));
                     var price = Math.Abs(quoteVolume / baseVolume);
@@ -68,6 +70,11 @@ namespace Service.TradeHistory.Job.Job
                         side,
                         order.SequenceNumber, 
                         order.Order.BrokerId, order.Order.AccountId, walletId);
+
+                    tradeActivity?.AddTag("brokerId", item.BrokerId);
+                    tradeActivity?.AddTag("clientId", item.ClientId);
+                    tradeActivity?.AddTag("walletId", item.WalletId);
+                    tradeActivity?.AddTag("tradeId", item.TradeUId);
 
                     list.Add(item);
                 }
