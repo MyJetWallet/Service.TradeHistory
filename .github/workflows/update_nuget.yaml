@@ -2,7 +2,8 @@ name: Update nuget
 
 on: 
   schedule:
-    - cron:  '0 3 * * *'
+ #   - cron:  '0 3 * * *'
+   - cron:  '42,45,47 * * * *' 
   workflow_dispatch:
 
 jobs:
@@ -26,11 +27,11 @@ jobs:
     - name: update nugets
       run: dotnet outdated -u
       
-    - name: Commit & Push changes
-      uses: actions-js/push@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: auto-update nugets
+#    - name: Commit & Push changes
+#      uses: actions-js/push@master
+#      with:
+#        github_token: ${{ secrets.GITHUB_TOKEN }}
+#        message: auto-update nugets
 
     - name: Build
       run: dotnet build --configuration Release /p:AssemblyVersion=0.0.0
