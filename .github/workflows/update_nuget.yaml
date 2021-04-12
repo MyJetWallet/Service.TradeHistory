@@ -20,6 +20,9 @@ jobs:
     - name: install dotnet-outdated-tool
       run: dotnet tool install --global dotnet-outdated-tool
       
+    - name: ls
+      run: ls
+      
     - name: update nugets
       run: dotnet outdated -u
       
