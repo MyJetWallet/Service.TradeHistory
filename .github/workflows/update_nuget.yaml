@@ -1,10 +1,8 @@
 name: Update nuget
 
-on: 
+on:
   schedule:
- #   - cron:  '0 3 * * *'
-   - cron:  '* * * * *' 
-  workflow_dispatch:
+    - cron:  '* * * * *'   
 
 jobs:
   build:
