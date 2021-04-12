@@ -2,7 +2,7 @@ name: Update nuget
 
 on:
   schedule:
-    - cron:  '0 * 12 * *'   
+    - cron:  '0/5 * 12 * *'   
 
 jobs:
   build:
