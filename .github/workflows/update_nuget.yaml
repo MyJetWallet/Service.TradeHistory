@@ -3,7 +3,7 @@ name: Update nuget
 on: 
   schedule:
  #   - cron:  '0 3 * * *'
-   - cron:  '42,45,47 * * * *' 
+   - cron:  '* * * * *' 
   workflow_dispatch:
 
 jobs:
