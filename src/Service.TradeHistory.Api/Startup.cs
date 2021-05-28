@@ -34,7 +34,7 @@ namespace Service.TradeHistory.Api
 
             services.AddDatabaseWithoutMigrations<DatabaseContext>(DatabaseContext.Schema, Program.Settings.PostgresConnectionString);
 
-            services.AddMyTelemetry(Program.Settings.ZipkinUrl);
+            services.AddMyTelemetry("SP-", Program.Settings.ZipkinUrl);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
