@@ -58,7 +58,7 @@ namespace Service.TradeHistory.Job.Job
                     var price = Math.Abs(quoteVolume / baseVolume);
                     var tradeId = $"{order.Order.ExternalId}-{order.SequenceNumber}";
                     var walletId = order.Order.WalletId;
-                    var side = MapSide(order.Order.Side);
+                    var side = MapSide(order.Order.Side, order.Order.Straight);
 
                     //Console.WriteLine($"{tradeId}[{walletId}] {side} {baseVolume} for {quoteVolume} price: {price} |{order.Order.LastMatchTime.ToDateTime():HH:mm:ss}");
 
@@ -121,12 +121,12 @@ namespace Service.TradeHistory.Job.Job
             await _publisher.PublishAsync(item);
         }
 
-        private OrderSide MapSide(Order.Types.OrderSide side)
+        private OrderSide MapSide(Order.Types.OrderSide side, bool straight)
         {
             switch (side)
             {
-                case Order.Types.OrderSide.Buy: return OrderSide.Buy;
-                case Order.Types.OrderSide.Sell: return OrderSide.Sell;
+                case Order.Types.OrderSide.Buy: return straight ? OrderSide.Buy: OrderSide.Sell;
+                case Order.Types.OrderSide.Sell: return straight ? OrderSide.Sell: OrderSide.Buy;
             }
 
             return OrderSide.UnknownOrderSide;
